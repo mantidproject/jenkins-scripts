@@ -30,6 +30,7 @@ pr_job_map.each { name_jobs ->
     pr_tasks = pr_task_map.get(pr_number, [])
     pr_tasks << job
   }
+  def jobs_killed = false
   pr_task_map.each { pr_task ->
     tasks = pr_task.getValue()
     if (tasks.size() > 1 ) {
@@ -37,7 +38,11 @@ pr_job_map.each { name_jobs ->
       tasks[0..-2].each { task ->
 	    println "  Killing old queued job for " + pr_task.getKey() + " with ID=" + task.id
         queue.cancel(task)
+        jobs_killed = true
       }
     }
+  }
+  if (!jobs_killed) {
+      println "  No duplicate PR jobs found"
   }
 }
