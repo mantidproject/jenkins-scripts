@@ -46,3 +46,6 @@ pr_job_map.each { name_jobs ->
       println "  No duplicate PR jobs found"
   }
 }
+
+// Avoids Jenkins printing all of the defined variables in the Result: section
+return 0
