@@ -4,6 +4,7 @@
 // same OS and pull request number.
 
 import hudson.model.*
+import jenkins.model.Jenkins
 
 PULL_REQUEST_JOB_NAME_PREFIX = 'pull_requests-'
 
