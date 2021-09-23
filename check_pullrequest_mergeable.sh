@@ -4,11 +4,19 @@
 # See https://docs.github.com/en/rest/guides/getting-started-with-the-git-database-api#checking-mergeability-of-pull-requests
 # for the background to the steps followed here.
 # It is assumend an environment variable GITHUB_OAUTH_TOKEN is defined
+# An exit status of:
+#  - 0: pull request can be merged
+#  - 1: pull request has conflicts
+#  - 2: other error
+
+EXIT_STATUS_MERGEABLE=0
+EXIT_STATUS_CONFLICTS=1
+EXIT_STATUS_ERRORS=2
 
 function usage {
   echo 'Check if a given pull request is in a mergeable state'
   echo "Usage: $0 owner/repo pull_request_number"
-  exit 1
+  exit $EXIT_STATUS_ERRORS
 }
 
 if [[ $# -ne 2 ]]; then
@@ -28,7 +36,7 @@ elif [ $(command -v wget) ]; then
   HAVE_WGET=true
 else
   echo "Unable to find curl or wget. Cannot continue"
-  exit 1
+  exit $EXIT_STATUS_ERRORS
 fi
 
 # GET json data using either curl or wget depending on what is available
@@ -126,12 +134,12 @@ while [ "$counter" -lt $max_tries ]; do
   mergeable="$(pull_request_mergeable ${BASE_REPO} ${PULL_NUMBER})"
   if [ "$mergeable" == "MERGEABLE" ]; then
     echo "Pull request can be merged."
-    exit 0
+    exit $EXIT_STATUS_MERGEABLE
   elif [ "$mergeable" == "CONFLICTING" ]; then
     echo
     echo "Pull request ${PULL_NUMBER} cannot be merged as there are conflicts. Please fix them by rebasing against the base branch."
     echo
-    exit 1
+    exit $EXIST_STATUS_CONFLICTS
   elif [ "$mergeable" == "UNKNOWN" ]; then
     echo "Mergeable status is still being computed."
     counter=$(( counter + 1 ))
@@ -139,11 +147,11 @@ while [ "$counter" -lt $max_tries ]; do
   else
     echo "Unknown state returned from pull request mergability check. Found '${mergable}', expected one of (MERGABLE|CONFLICTING|UNKNOWN)"
     echo "Perhaps the pull request has been closed?"
-    exit 1
+    exit $EXIT_STATUS_ERRORS
   fi
 done
 
 if [ "$counter" -eq $max_tries ]; then
   echo "Unable to determine mergability of pull request #${PULL_NUMBER}. Perhaps contact GitHub?"
-  exit 1
+  exit $EXIT_STATUS_ERRORS
 fi
