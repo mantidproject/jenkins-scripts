@@ -10,8 +10,8 @@
 #  - 2: other error
 
 EXIT_STATUS_MERGEABLE=0
-EXIT_STATUS_CONFLICTS=1
-EXIT_STATUS_ERRORS=2
+EXIT_STATUS_ERRORS=1
+EXIT_STATUS_CONFLICTS=2
 
 function usage {
   echo 'Check if a given pull request is in a mergeable state'
