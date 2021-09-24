@@ -139,7 +139,7 @@ while [ "$counter" -lt $max_tries ]; do
     echo
     echo "Pull request ${PULL_NUMBER} cannot be merged as there are conflicts. Please fix them by rebasing against the base branch."
     echo
-    exit $EXIST_STATUS_CONFLICTS
+    exit $EXIT_STATUS_CONFLICTS
   elif [ "$mergeable" == "UNKNOWN" ]; then
     echo "Mergeable status is still being computed."
     counter=$(( counter + 1 ))
