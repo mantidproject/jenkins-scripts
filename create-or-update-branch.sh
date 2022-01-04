@@ -28,13 +28,11 @@ else
 fi
 
 # Get the current branch ref if it exists
-current_branch_ref=$(curl --silent \
-                          --request GET \
+current_branch_ref=$(curl --request GET \
                           ${repo_url}/git/ref/heads/${branchname} | jq --raw-output .object.sha)
 if [ "${current_branch_ref}" != "null" ]; then
     echo "${branchname} exists, updating reference to it with value ${ref}"
-    branchname_sha=$(curl --silent \
-                          --user ${credentials} \
+    branchname_sha=$(curl --user ${credentials} \
                           --request POST \
                           --data "{\"sha\": \"${base_sha}\", \"force\": true}" \
                           ${repo_url}/git/refs/heads/${branchname} | jq .object.sha)
@@ -42,8 +40,7 @@ if [ "${current_branch_ref}" != "null" ]; then
 else
     echo "${branchname} does not exist, creating reference to it with value ${ref}"
     # branch does not exist - create it
-    branchname_sha=$(curl --silent \
-                          --user ${credentials} \
+    branchname_sha=$(curl --user ${credentials} \
                           --request POST \
                           --data "{\"ref\": \"refs/heads/${branchname}\", \"sha\": \"${base_sha}\"}" \
                           ${repo_url}/git/refs | jq .object.sha)
