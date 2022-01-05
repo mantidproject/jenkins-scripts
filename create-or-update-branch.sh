@@ -36,7 +36,7 @@ if [ "${current_branch_ref}" != "null" ]; then
                           --request POST \
                           --data "{\"sha\": \"${base_sha}\", \"force\": true}" \
                           ${repo_url}/git/refs/heads/${branchname})
-    branchname_sha=$(echo ${repsonse} | jq --raw-output .object.sha)
+    branchname_sha=$(echo ${response} | jq --raw-output .object.sha)
     action=updated
 else
     echo "${branchname} does not exist, creating reference to it with value ${ref}"
