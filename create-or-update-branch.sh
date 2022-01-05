@@ -32,23 +32,25 @@ current_branch_ref=$(curl --request GET \
                           ${repo_url}/git/ref/heads/${branchname} | jq --raw-output .object.sha)
 if [ "${current_branch_ref}" != "null" ]; then
     echo "${branchname} exists, updating reference to it with value ${ref}"
-    branchname_sha=$(curl --user ${credentials} \
+    response=$(curl --user ${credentials} \
                           --request POST \
                           --data "{\"sha\": \"${base_sha}\", \"force\": true}" \
-                          ${repo_url}/git/refs/heads/${branchname} | jq .object.sha)
+                          ${repo_url}/git/refs/heads/${branchname})
+    branchname_sha=$(echo ${repsonse} | jq --raw-output .object.sha)
     action=updated
 else
     echo "${branchname} does not exist, creating reference to it with value ${ref}"
     # branch does not exist - create it
-    branchname_sha=$(curl --user ${credentials} \
+    response=$(curl --user ${credentials} \
                           --request POST \
                           --data "{\"ref\": \"refs/heads/${branchname}\", \"sha\": \"${base_sha}\"}" \
-                          ${repo_url}/git/refs | jq .object.sha)
+                          ${repo_url}/git/refs)
+    branchname_sha=$(echo ${response} | jq --raw-output .object.sha)
     action=created
 fi
 
 if [ "${updated_sha}" != "null" ]; then
-    echo "Successfully ${action} ${branchname}"
+    echo "Successfully ${action} ${branchname} at ref ${branchname_sha}"
 else
     echo "An error occurred. Run script with bash -ex to debug."
 fi
