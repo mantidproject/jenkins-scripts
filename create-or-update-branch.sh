@@ -8,7 +8,7 @@ if [ $# -ne 4 ]; then
   echo
   echo "   branchname - Name of the branch to create/update"
   echo "   repo - Full name of repository to act on as owner/repo, e.g. mantidproject/mantid"
-  echo "   ref - Reference that branch should be set to, e.g. master"
+  echo "   ref - Reference that branch should be set to, e.g. main"
   echo "   credentials - Username and token with push access to repo in format username:token"
   exit 1
 fi
