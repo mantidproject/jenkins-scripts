@@ -49,8 +49,9 @@ else
     action=created
 fi
 
-if [ "${updated_sha}" != "null" ]; then
+if [ "${branchname_sha}" != "null" ]; then
     echo "Successfully ${action} ${branchname} at ref ${branchname_sha}"
 else
     echo "An error occurred. Run script with bash -ex to debug."
+    exit 1
 fi
