@@ -9,5 +9,5 @@ def chosenJobs = jenkins.items.findAll{job -> jobNames.contains(job.name)};
 
 chosenJobs.each { job ->
   println "Disabling job " + job.name;
-  job.disable()
+  job.doDisable()
 }
