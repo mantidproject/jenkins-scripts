@@ -2,7 +2,7 @@
  * Clear the queue and cancel all running jobs.
  */
 
-import hudson.model.Jenkins
+import jenkins.model.Jenkins
 
 // Stop all of the queued jobs.
 
